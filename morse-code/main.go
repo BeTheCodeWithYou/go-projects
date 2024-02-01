@@ -104,6 +104,8 @@ var morseValMap = map[string]string{
 	")": "-.--.-",
 }
 
+// -.. --- .. -. --.    .-- --- .-. -.-   ..-. --- .-.   -- .   .- -. -..   -- ..- --   - .... .- -   ..-
+
 func main() {
 
 	str := DecodeMorse(".... . -.--   .--- ..- -.. .")
@@ -120,9 +122,8 @@ func pageLoadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func morseCodeHandler(w http.ResponseWriter, r *http.Request) {
-	htmlStr := fmt.Sprintf("<p>%s</p>", DecodeMorse(r.PostFormValue("morse-code")))
-	t, _ := template.New("t").Parse(htmlStr)
-	t.Execute(w, nil)
+	tmpl := template.Must(template.ParseFiles("index.html"))
+	tmpl.ExecuteTemplate(w, "decoded-morese-code-here", DecodeMorse(r.PostFormValue("morse-code")))
 }
 
 func DecodeMorse(morseCode string) string {

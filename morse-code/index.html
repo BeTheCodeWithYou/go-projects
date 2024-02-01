@@ -22,7 +22,12 @@
         <label class="col-sm-2 col-form-label">Enter Morse Code</label>
 
         <div class="mb-2">
-          <textarea class="form-control" name="morse-code" rows="3"></textarea>
+          <textarea
+            class="form-control"
+            name="morse-code"
+            rows="3"
+            cols="5"
+          ></textarea>
         </div>
 
         <div>
@@ -35,7 +40,13 @@
             Decode Morse Code
           </button>
         </div>
-        <div id="decoded-morse"></div>
+        <div id="decoded-morse">
+          {{ block "decoded-morese-code-here" .}}
+
+          <p>{{ . }}</p>
+
+          {{ end }}
+        </div>
       </div>
     </form>
   </body>
