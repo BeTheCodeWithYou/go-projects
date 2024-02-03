@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+
 	//"io"
+	"fmt"
 	"net/http"
 	"strings"
 	"text/template"
@@ -101,8 +102,7 @@ var morseValMap = map[string]string{
 	"/": "-..-.",
 	"@": ".--.-.",
 	"(": "-.--.",
-	")": "-.--.-",
-	" ": "   ",
+	")": "-.--.-",	
 }
 
 // -.. --- .. -. --.    .-- --- .-. -.-   ..-. --- .-.   -- .   .- -. -..   -- ..- --   - .... .- -   ..-
@@ -110,12 +110,12 @@ var morseValMap = map[string]string{
 //3 spaces are used to separate words
 //The Morse code is case-insensitive, traditionally capital letters are used
 
+// HEY JUDE
+// MORSE CODE-> .... . -.--   .--- ..- -.. .
+
 func main() {
 
-	str := decodeMorse(".... . -.--   .--- ..- -.. .")
-	fmt.Println(str)
-	fmt.Println("###->",encodeToMorseCode("hello hi"))
-
+	fmt.Println("encode morse code for HI B is->",encodeToMorseCode("HI B"))
 	http.HandleFunc("/", pageLoadHandler)
 	http.HandleFunc("/morsecode", morseCodeHandler)
 	http.ListenAndServe("localhost:8080", nil)
@@ -131,9 +131,9 @@ func morseCodeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("index.html"))
 	inputTxt := r.Form["morse-code"][0]
 	if r.Form["actionVal"]!=nil{
-	tmpl.ExecuteTemplate(w, "decoded-morese-code-here", decodeMorse(inputTxt))
+	tmpl.ExecuteTemplate(w, "decoded-morse-code-here", decodeMorse(inputTxt))
 	} else {
-	 tmpl.ExecuteTemplate(w, "decoded-morese-code-here", encodeToMorseCode(inputTxt))
+	 tmpl.ExecuteTemplate(w, "decoded-morse-code-here", encodeToMorseCode(inputTxt))
 	}
 	
 }
@@ -159,13 +159,14 @@ func encodeToMorseCode(plainText string) string {
 	s := strings.Split(s1, "")
 	var cd []string
 	var mcode string
-	for _,v := range s{
-		mcode = morseValMap[v]
-		cd = append(cd, mcode)
-		cd = append(cd, " ")
-		if v ==" "{
-		  cd = append(cd, "   ")
+	for _,v := range s{	
+		if v == " "{
+			cd = append(cd, " ")			
+		} else {
+			mcode = morseValMap[v]
+			cd = append(cd, mcode)
 		}
 	}
 	return strings.Join(cd, " ")
+	
 }
