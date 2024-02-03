@@ -102,18 +102,23 @@ var morseValMap = map[string]string{
 	"@": ".--.-.",
 	"(": "-.--.",
 	")": "-.--.-",
+	" ": "   ",
 }
 
 // -.. --- .. -. --.    .-- --- .-. -.-   ..-. --- .-.   -- .   .- -. -..   -- ..- --   - .... .- -   ..-
+//When the message is written in Morse code, a single space is used to separate the character codes and 
+//3 spaces are used to separate words
+//The Morse code is case-insensitive, traditionally capital letters are used
 
 func main() {
 
-	str := DecodeMorse(".... . -.--   .--- ..- -.. .")
+	str := decodeMorse(".... . -.--   .--- ..- -.. .")
 	fmt.Println(str)
+	fmt.Println("###->",encodeToMorseCode("hello hi"))
 
 	http.HandleFunc("/", pageLoadHandler)
 	http.HandleFunc("/morsecode", morseCodeHandler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("localhost:8080", nil)
 }
 
 func pageLoadHandler(w http.ResponseWriter, r *http.Request) {
@@ -122,11 +127,18 @@ func pageLoadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func morseCodeHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	tmpl := template.Must(template.ParseFiles("index.html"))
-	tmpl.ExecuteTemplate(w, "decoded-morese-code-here", DecodeMorse(r.PostFormValue("morse-code")))
+	inputTxt := r.Form["morse-code"][0]
+	if r.Form["actionVal"]!=nil{
+	tmpl.ExecuteTemplate(w, "decoded-morese-code-here", decodeMorse(inputTxt))
+	} else {
+	 tmpl.ExecuteTemplate(w, "decoded-morese-code-here", encodeToMorseCode(inputTxt))
+	}
+	
 }
 
-func DecodeMorse(morseCode string) string {
+func decodeMorse(morseCode string) string {
 	morseCode = strings.TrimSpace(morseCode)
 	wrds := strings.Split(morseCode, "   ")
 	for i, word := range wrds {
@@ -139,4 +151,21 @@ func DecodeMorse(morseCode string) string {
 	}
 
 	return strings.Join(wrds, " ")
+}
+
+func encodeToMorseCode(plainText string) string {
+
+	s1 := strings.ToUpper(strings.TrimSpace(plainText))
+	s := strings.Split(s1, "")
+	var cd []string
+	var mcode string
+	for _,v := range s{
+		mcode = morseValMap[v]
+		cd = append(cd, mcode)
+		cd = append(cd, " ")
+		if v ==" "{
+		  cd = append(cd, "   ")
+		}
+	}
+	return strings.Join(cd, " ")
 }
