@@ -30,7 +30,7 @@
         $("#submitLabel").text("Decode");
       } else {
         $("#submitLabel").text("Encode");
-        $("#defaultTexAreaVal").text("Write english text here");
+        $("#defaultTexAreaVal").text("Write plain text here");
       }
     });
     });
@@ -75,14 +75,14 @@
 
         <div>
           <button type="submit" class="btn btn-primary mb-2">
-          
            <span id="submitLabel">Decode<span>
-          
           </button>
         </div>
         <div id="decoded-morse">
           {{ block "decoded-morse-code-here" .}}
-          <pre id="respVal">{{ . }}</pre>
+          <pre id="respVal" class="font-weight-bold">{{ . }}</pre>  <!-- pre text ensure that spaces
+                                                                     are not removed and in morse code space has 
+                                                                    key significance-->
           {{ end }}
         </div>
       </div>
