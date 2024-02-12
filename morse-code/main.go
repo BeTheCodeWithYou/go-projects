@@ -1,9 +1,6 @@
 package main
 
 import (
-
-	//"io"
-	"fmt"
 	"net/http"
 	"strings"
 	"text/template"
@@ -105,17 +102,8 @@ var morseValMap = map[string]string{
 	")": "-.--.-",	
 }
 
-// -.. --- .. -. --.    .-- --- .-. -.-   ..-. --- .-.   -- .   .- -. -..   -- ..- --   - .... .- -   ..-
-//When the message is written in Morse code, a single space is used to separate the character codes and 
-//3 spaces are used to separate words
-//The Morse code is case-insensitive, traditionally capital letters are used
-
-// HEY JUDE
-// MORSE CODE-> .... . -.--   .--- ..- -.. .
-
 func main() {
 
-	fmt.Println("encode morse code for HI B is->",encodeToMorseCode("HI B"))
 	http.HandleFunc("/", pageLoadHandler)
 	http.HandleFunc("/morsecode", morseCodeHandler)
 	http.ListenAndServe("localhost:8080", nil)
@@ -139,8 +127,7 @@ func morseCodeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func decodeMorse(morseCode string) string {
-	morseCode = strings.TrimSpace(morseCode)
-	wrds := strings.Split(morseCode, "   ")
+	wrds := strings.Split(strings.TrimSpace(morseCode), "   ")
 	for i, word := range wrds {
 		chrs := strings.Split(word, " ")
 		for i, chr := range chrs {
@@ -155,8 +142,7 @@ func decodeMorse(morseCode string) string {
 
 func encodeToMorseCode(plainText string) string {
 
-	s1 := strings.ToUpper(strings.TrimSpace(plainText))
-	s := strings.Split(s1, "")
+	s := strings.Split(strings.ToUpper(strings.TrimSpace(plainText)), "")
 	var cd []string
 	var mcode string
 	for _,v := range s{	
