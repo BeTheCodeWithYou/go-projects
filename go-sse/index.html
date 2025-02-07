@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+  <title>GO-Server Sent Events</title>
+  <body>
+    Memory: <span id="mem"></span><br />
+    CPU: <span id="cpu"></span>
+  </body>
+
+  <script type="text/javascript">
+    const eventSrc = new EventSource("http://127.0.0.1:9090/events");
+
+    const m = document.getElementById("mem");
+    const c = document.getElementById("cpu");
+
+    eventSrc.addEventListener("memory", (event) => {
+      m.textContent = event.data;
+    });
+
+    eventSrc.addEventListener("cpu", (event) => {
+      c.textContent = event.data;
+    });
+  </script>
+</html>
